@@ -1,0 +1,46 @@
+<div class="container">
+  <h1>Simple Task Manager</h1>
+
+  <form [formGroup]="taskForm" (ngSubmit)="submit()">
+    <div class="field">
+      <label for="title">Title *</label>
+      <input id="title" type="text" formControlName="title" />
+      @if (taskForm.controls.title.touched && taskForm.controls.title.hasError('required')) {
+        <small class="error">Title is required.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" rows="3" formControlName="description"></textarea>
+    </div>
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'Saving...' : 'Add Task' }}
+    </button>
+  </form>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  <h2>Tasks</h2>
+  @if (tasks().length === 0) {
+    <p>No tasks yet. Add your first one above!</p>
+  } @else {
+    <ul>
+      @for (task of tasks(); track task.id) {
+        <li>
+          <strong>{{ task.title }}</strong>
+          @if (task.description) {
+            <p>{{ task.description }}</p>
+          }
+          <small>Created: {{ task.createdAt }}</small>
+        </li>
+      }
+    </ul>
+  }
+</div>
